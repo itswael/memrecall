@@ -1,0 +1,3 @@
+-keep class com.memrecall.data.local.entity.** { *; }
+-keep class com.memrecall.domain.model.** { *; }
+-dontwarn com.google.api.**
