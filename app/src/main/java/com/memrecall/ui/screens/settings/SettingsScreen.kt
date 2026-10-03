@@ -1,5 +1,7 @@
 package com.memrecall.ui.screens.settings
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,16 +12,48 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    viewModel: SettingsViewModel = hiltViewModel(),
+) {
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
     var darkMode by remember { mutableStateOf(false) }
     var dailyGoal by remember { mutableIntStateOf(20) }
+
+    val importState by viewModel.importState.collectAsState()
+
+    val filePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        uri?.let { viewModel.importFromJson(it, context) }
+    }
+
+    LaunchedEffect(importState) {
+        when (val state = importState) {
+            is ImportState.Success -> {
+                snackbarHostState.showSnackbar(
+                    "Imported ${state.count} cards into \"${state.subjectName}\""
+                )
+                viewModel.resetImportState()
+            }
+            is ImportState.Error -> {
+                snackbarHostState.showSnackbar("Import failed: ${state.message}")
+                viewModel.resetImportState()
+            }
+            else -> {}
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -31,7 +65,8 @@ fun SettingsScreen(navController: NavController) {
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -80,10 +115,16 @@ fun SettingsScreen(navController: NavController) {
                     onClick = { /* TODO: Drive restore */ },
                 )
                 SettingsActionRow(
-                    icon = Icons.Outlined.FileUpload,
+                    icon = if (importState is ImportState.Loading)
+                        Icons.Outlined.HourglassEmpty else Icons.Outlined.FileUpload,
                     title = "Import JSON / CSV",
-                    subtitle = "Bulk import cards from file",
-                    onClick = { /* TODO: file picker */ },
+                    subtitle = if (importState is ImportState.Loading)
+                        "Importing…" else "Bulk import cards from file",
+                    onClick = {
+                        if (importState !is ImportState.Loading) {
+                            filePicker.launch(arrayOf("application/json", "*/*"))
+                        }
+                    },
                 )
             }
 
