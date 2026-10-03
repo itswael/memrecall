@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Card stack icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,22 L82,34 L82,58 Q82,72 54,82 Q26,72 26,58 L26,34 Z" />
+    <path
+        android:fillColor="#6366F1"
+        android:pathData="M54,30 L76,40 L76,58 Q76,68 54,76 Q32,68 32,58 L32,40 Z" />
+    <!-- Letter M for MemRecall -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,48 L46,48 L54,58 L62,48 L66,48 L66,68 L62,68 L62,55 L54,65 L46,55 L46,68 L42,68 Z" />
+</vector>
