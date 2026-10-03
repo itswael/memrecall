@@ -22,7 +22,6 @@ gson = "2.11.0"
 coil = "2.7.0"
 accompanist = "0.36.0"
 lottie = "6.6.0"
-vico = "2.0.0-beta.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -80,10 +79,6 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 # Lottie animations
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 
-# Vico charts
-vico-compose = { group = "com.patrykandpatrick.vico", name = "vico-compose", version.ref = "vico" }
-vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "vico-compose-m3", version.ref = "vico" }
-vico-core = { group = "com.patrykandpatrick.vico", name = "vico-core", version.ref = "vico" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
